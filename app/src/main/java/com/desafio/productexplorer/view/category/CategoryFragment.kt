@@ -31,6 +31,7 @@ class CategoryFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = findNavController(view)
+        binding.tvNoData.visibility = View.GONE
         binding.rvCategory.layoutManager= LinearLayoutManager(context)
         binding.rvCategory.adapter=adapter
         adapter.onClickItem = {
@@ -40,7 +41,13 @@ class CategoryFragment : Fragment(){
             navController.navigate(R.id.action_categoryFragment_to_productsFragment, bundle)
         }
         viewModel.categoryLiveData.observe(viewLifecycleOwner){
-            adapter.updateList(it)
+            if (it.isEmpty()){
+                binding.tvNoData.visibility = View.VISIBLE
+                binding.tvNoData.text = context?.getText(R.string.error_data)
+            }else{
+                adapter.updateList(it)
+            }
+
         }
 
     }

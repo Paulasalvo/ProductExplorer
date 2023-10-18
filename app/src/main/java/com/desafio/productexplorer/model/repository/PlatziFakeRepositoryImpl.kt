@@ -18,8 +18,19 @@ class PlatziFakeRepositoryImpl @Inject constructor(
 ): PlatziFakeRepository {
     override fun getCategory(): Flow<List<Category>> {
        return flow {
-           val response = apiService.getCategories()
-           emit(response.map { Category(it.id, it.name, it.image) })
+           try {
+               val response = apiService.getCategories()
+               emit(response.map {
+                   Category(
+                       it.id ?: 0,
+                       it.name.orEmpty(),
+                       it.image.orEmpty()
+                   )
+               })
+           }catch (e: Exception){
+               emit(emptyList())
+           }
+
        }
     }
 
@@ -39,35 +50,17 @@ class PlatziFakeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getProductDetail(id: Int): Flow<ProductDetail> {
-
-        return try {
-            productDAO.getProductDetail(id).map {
-                ProductDetail(
-                    id = it.id,
-                    title = it.title,
-                    description = it.description,
-                    price = it.price,
-                    creationAt = it.creationAt,
-                    rating = it.rating,
-                    comment = it.comment
-                )
-            }
-        }catch (e: Exception){
-            flow{
-                emit(ProductDetail(
-                    id = 0,
-                    title = "",
-                    description = "",
-                    price = 0,
-                    creationAt = "",
-                    rating = 0,
-                    comment = ""
-                ))
-            }
-
-        }
-
+    override suspend fun getProductDetail(id: Int): ProductDetail {
+        val productDetailEntity = productDAO.getProductDetail(id)
+        return ProductDetail(
+            id = id,
+            title = productDetailEntity?.title.orEmpty(),
+            description = productDetailEntity?.description.orEmpty(),
+            price = productDetailEntity?.price ?: 0,
+            creationAt = productDetailEntity?.creationAt.orEmpty(),
+            rating = productDetailEntity?.rating ?: 0,
+            comment =productDetailEntity?.comment.orEmpty()
+        )
     }
 
     override suspend fun setProductDetail(productDetail: ProductDetail) {

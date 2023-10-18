@@ -11,7 +11,7 @@ interface PlatziFakeRepository {
 
     fun getProducts(id:Int):Flow<List<Product>>
 
-    fun getProductDetail(id: Int) : Flow<ProductDetail>
+    suspend fun getProductDetail(id: Int) : ProductDetail
 
     suspend fun setProductDetail(productDetail: ProductDetail)
 }

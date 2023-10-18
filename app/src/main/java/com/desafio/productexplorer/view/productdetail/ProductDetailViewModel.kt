@@ -1,5 +1,6 @@
 package com.desafio.productexplorer.view.productdetail
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -14,7 +15,15 @@ import javax.inject.Inject
 class ProductDetailViewModel @Inject constructor(
     private val repository: PlatziFakeRepository
 ): ViewModel() {
-    fun productDetail(id: Int)= repository.getProductDetail(id).asLiveData()
+
+    var productDetailLiveData: MutableLiveData<ProductDetail> = MutableLiveData()
+    fun productDetail(id: Int) {
+        viewModelScope.launch {
+            val productDetail = repository.getProductDetail(id)
+            productDetailLiveData.postValue(productDetail)
+        }
+
+    }
 
     fun saveProductDetail(productDetail: ProductDetail){
         viewModelScope.launch(Dispatchers.IO) {

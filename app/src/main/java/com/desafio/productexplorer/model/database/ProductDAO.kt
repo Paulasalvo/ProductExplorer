@@ -12,7 +12,7 @@ interface ProductDAO {
     suspend fun insertProductDetail(productDetailEntity: ProductDetailEntity)
 
     @Query("SELECT * FROM product_detail_table WHERE id=:id")
-    fun getProductDetail(id:Int): Flow<ProductDetailEntity>
+    suspend fun getProductDetail(id:Int): ProductDetailEntity?
 
 
 }

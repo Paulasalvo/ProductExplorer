@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ProductExplorer</string>
+    <string name="save_data">Datos Guardados con exito</string>
+    <string name="error_data">No hay datos disponibles</string>
 </resources>
