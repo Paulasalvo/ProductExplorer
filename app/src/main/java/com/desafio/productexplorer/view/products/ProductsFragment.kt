@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.desafio.productexplorer.Constant
 import com.desafio.productexplorer.R
 import com.desafio.productexplorer.databinding.FragmentProductsBinding
+import com.desafio.productexplorer.model.data.ProductDetail
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +36,17 @@ class ProductsFragment: Fragment() {
         binding.rvProducts.adapter=adapter
 
         adapter.onClickItem = {
+            viewModel.saveProductDetail(
+                ProductDetail(
+                    id = it.id,
+                    title = it.title,
+                    description = it.description,
+                    price = it.price,
+                    creationAt = it.creationAt,
+                    rating = 0,
+                    comment = ""
+                )
+            )
             val bundle=Bundle()
             bundle.putParcelable(Constant.BUNDLE_PRODUCT, it)
             navController.navigate(R.id.action_productsFragment_to_productDetailFragment, bundle)

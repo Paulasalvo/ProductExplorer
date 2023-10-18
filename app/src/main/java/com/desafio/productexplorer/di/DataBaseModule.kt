@@ -2,6 +2,7 @@ package com.desafio.productexplorer.di
 
 import android.content.Context
 import androidx.room.Room
+import com.desafio.productexplorer.model.database.ProductDAO
 import com.desafio.productexplorer.model.database.ProductDataBase
 import dagger.Module
 import dagger.Provides
@@ -14,9 +15,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataBaseModule {
-    @Provides
+/*    @Provides
     @Singleton
     fun provideDataBase(@ApplicationContext context: Context): ProductDataBase {
         return Room.databaseBuilder(context, ProductDataBase::class.java, "product_database").build()
     }
+
+    @Provides
+    @Singleton
+    fun provideProductDao(dataBase: ProductDataBase): ProductDAO {
+        return dataBase.ProductDAO()
+    }*/
 }

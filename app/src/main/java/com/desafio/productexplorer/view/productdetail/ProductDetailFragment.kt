@@ -12,8 +12,11 @@ import com.desafio.productexplorer.Constant
 import com.desafio.productexplorer.R
 import com.desafio.productexplorer.databinding.FragmentProductDetailBinding
 import com.desafio.productexplorer.model.data.Product
+import com.desafio.productexplorer.model.data.ProductDetail
 import com.desafio.productexplorer.util.UtilFormat
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProductDetailFragment: Fragment() {
     private lateinit var binding: FragmentProductDetailBinding
     val viewModel: ProductDetailViewModel by viewModels()
@@ -53,6 +56,30 @@ class ProductDetailFragment: Fragment() {
             .load(product?.images?.getOrNull(2))
             .into(binding.ivImagenProducto3)
 
+        binding.ratingBar.stepSize = 1.0f
+
+        if (product!=null){
+            viewModel.productDetail(product.id).observe(viewLifecycleOwner){
+                binding.ratingBar.rating = it.rating.toFloat()
+                binding.editTextComentario.setText(it.comment)
+            }
+        }
+
+        binding.btnGuardar.setOnClickListener {
+            if (product!= null){
+                val productDetail = ProductDetail(
+                    id = product.id,
+                    title = product.title,
+                    description = product.description,
+                    price = product.price,
+                    creationAt = product.creationAt,
+                    rating = binding.ratingBar.rating.toInt(),
+                    comment = binding.editTextComentario.text.toString()
+                )
+                viewModel.saveProductDetail(productDetail)
+            }
+
+        }
     }
 
 }
